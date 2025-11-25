@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAuth } from '@/lib/auth';
 import pool from '@/lib/db';
 
-export const GET = requireAuth(async (request: NextRequest, user) => {
+export async function GET(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await context.params;
+    
     const result = await pool.query(
       'SELECT id, email, name, role, avatar, created_at FROM users WHERE id = $1',
-      [user.id]
+      [id]
     );
 
     if (result.rows.length === 0) {
@@ -18,10 +22,10 @@ export const GET = requireAuth(async (request: NextRequest, user) => {
 
     return NextResponse.json(result.rows[0]);
   } catch (error) {
-    console.error('Error fetching current user:', error);
+    console.error('Error fetching user:', error);
     return NextResponse.json(
       { error: 'Failed to fetch user' },
       { status: 500 }
     );
   }
-});
+}

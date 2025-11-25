@@ -27,14 +27,14 @@ export default function Header() {
 
   useEffect(() => {
     checkAuth();
-  }, []);
+  }, [pathname]);
 
   const checkAuth = async () => {
     try {
       const response = await fetch('/api/auth/me');
       if (response.ok) {
         const data = await response.json();
-        setUser(data.user);
+        setUser(data);
       }
     } catch (error) {
       console.error('Error checking auth:', error);

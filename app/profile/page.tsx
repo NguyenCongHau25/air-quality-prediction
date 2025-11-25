@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   UserOutlined,
   MailOutlined,
@@ -11,20 +12,90 @@ import {
   HeartOutlined,
 } from '@ant-design/icons';
 
+interface UserData {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  avatar?: string;
+  created_at: string;
+  location?: string;
+  bio?: string;
+}
+
 export default function ProfilePage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const userId = searchParams.get('id');
+  
   const [isEditing, setIsEditing] = useState(false);
-  const [userData, setUserData] = useState({
-    name: 'Nguyễn Văn A',
-    email: 'nguyenvana@email.com',
-    location: 'Thành phố Hồ Chí Minh',
-    bio: 'Người yêu thích theo dõi thời tiết và chia sẻ kinh nghiệm',
-  });
+  const [loading, setLoading] = useState(true);
+  const [userData, setUserData] = useState<UserData | null>(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        setLoading(true);
+        const url = userId ? `/api/users/${userId}` : '/api/auth/me';
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+        
+        const data = await response.json();
+        setUserData(data);
+      } catch (error) {
+        console.error('Error fetching user:', error);
+        // Redirect to login if unauthorized
+        router.push('/login');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [userId, router]);
 
   const handleSave = () => {
     setIsEditing(false);
     // Save logic here
     console.log('Saved:', userData);
   };
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+      });
+      
+      if (response.ok) {
+        router.push('/login');
+      }
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <p className="text-gray-600">Đang tải...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!userData) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <p className="text-gray-600">Không tìm thấy thông tin người dùng</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -37,16 +108,18 @@ export default function ProfilePage() {
                 <UserOutlined />
               </div>
               <div>
-                <h1 className="text-3xl font-bold mb-2">{userData.name}</h1>
+                <h1 className="text-3xl font-bold mb-2">{userData.name || 'User'}</h1>
                 <div className="flex items-center space-x-4 text-blue-100">
                   <div className="flex items-center">
                     <MailOutlined className="mr-2" />
                     {userData.email}
                   </div>
-                  <div className="flex items-center">
-                    <EnvironmentOutlined className="mr-2" />
-                    {userData.location}
-                  </div>
+                  {userData.location && (
+                    <div className="flex items-center">
+                      <EnvironmentOutlined className="mr-2" />
+                      {userData.location}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -74,7 +147,7 @@ export default function ProfilePage() {
                     </label>
                     <input
                       type="text"
-                      value={userData.name}
+                      value={userData.name || ''}
                       onChange={(e) => setUserData({ ...userData, name: e.target.value })}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -85,7 +158,7 @@ export default function ProfilePage() {
                     </label>
                     <input
                       type="email"
-                      value={userData.email}
+                      value={userData.email || ''}
                       onChange={(e) => setUserData({ ...userData, email: e.target.value })}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -96,7 +169,7 @@ export default function ProfilePage() {
                     </label>
                     <input
                       type="text"
-                      value={userData.location}
+                      value={userData.location || ''}
                       onChange={(e) => setUserData({ ...userData, location: e.target.value })}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -106,7 +179,7 @@ export default function ProfilePage() {
                       Giới thiệu
                     </label>
                     <textarea
-                      value={userData.bio}
+                      value={userData.bio || ''}
                       onChange={(e) => setUserData({ ...userData, bio: e.target.value })}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg h-24 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -122,7 +195,7 @@ export default function ProfilePage() {
             ) : (
               <div className="bg-white rounded-xl shadow-md p-6">
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">Giới thiệu</h2>
-                <p className="text-gray-700 leading-relaxed">{userData.bio}</p>
+                <p className="text-gray-700 leading-relaxed">{userData.bio || 'Chưa có thông tin giới thiệu'}</p>
               </div>
             )}
 
@@ -186,7 +259,10 @@ export default function ProfilePage() {
                   <EnvironmentOutlined className="text-xl text-gray-600 mr-3" />
                   <span className="text-gray-700">Vị trí mặc định</span>
                 </button>
-                <button className="w-full flex items-center p-3 hover:bg-red-50 rounded-lg transition-colors text-left text-red-600">
+                <button 
+                  onClick={handleLogout}
+                  className="w-full flex items-center p-3 hover:bg-red-50 rounded-lg transition-colors text-left text-red-600"
+                >
                   <LogoutOutlined className="text-xl mr-3" />
                   <span>Đăng xuất</span>
                 </button>

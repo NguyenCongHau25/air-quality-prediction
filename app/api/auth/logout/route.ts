@@ -13,3 +13,8 @@ export async function POST(request: NextRequest) {
 
   return response;
 }
+
+export async function GET() {
+  // Also support GET for convenience
+  return POST({} as NextRequest);
+}

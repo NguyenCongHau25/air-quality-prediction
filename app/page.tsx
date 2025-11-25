@@ -31,6 +31,13 @@ const DEFAULT_LOCATION = {
   longitude: 106.6297,
 };
 
+const LOCATION_OPTIONS = [
+  { name: 'Thành phố Hồ Chí Minh', latitude: 10.8231, longitude: 106.6297 },
+  { name: 'Hà Nội', latitude: 21.0285, longitude: 105.8542 },
+  { name: 'Đà Nẵng', latitude: 16.0544, longitude: 108.2022 },
+  { name: 'Cần Thơ', latitude: 10.0379, longitude: 105.7869 },
+];
+
 export default function Home() {
   const [currentWeather, setCurrentWeather] = useState<WeatherData | null>(null);
   const [hourlyData, setHourlyData] = useState<HourlyData[]>([]);
@@ -60,7 +67,6 @@ export default function Home() {
     };
 
     fetchWeatherData();
-
     // Update time every minute
     const timeInterval = setInterval(() => {
       setCurrentTime(new Date());
@@ -119,7 +125,6 @@ export default function Home() {
           {/* Humidity Card */}
           <div className="bg-white/90 backdrop-blur rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
             <div className="flex items-center space-x-3 mb-3">
-              <div className="text-4xl text-teal-500">💧</div>
               <div>
                 <p className="text-sm text-gray-500 font-medium">Độ ẩm</p>
                 <p className="text-2xl font-bold text-gray-800">{currentWeather.humidity}%</p>
@@ -130,7 +135,6 @@ export default function Home() {
            {/* Wind Card */}
           <div className="bg-white/90 backdrop-blur rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
             <div className="flex items-center space-x-3 mb-3">
-              <div className="text-4xl text-blue-400">💨</div>
               <div>
                 <p className="text-sm text-gray-500 font-medium">Gió</p>
                 <p className="text-2xl font-bold text-gray-800">{currentWeather.windSpeed} km/h</p>
@@ -141,7 +145,6 @@ export default function Home() {
           {/* Pressure Card */}
           <div className="bg-white/90 backdrop-blur rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
             <div className="flex items-center space-x-3 mb-3">
-              <div className="text-4xl text-purple-400">🌡️</div>
               <div>
                 <p className="text-sm text-gray-500 font-medium">Áp suất</p>
                 <p className="text-2xl font-bold text-gray-800">{currentWeather.pressure} hPa</p>
@@ -152,7 +155,6 @@ export default function Home() {
           {/* UV Index Card */}
           <div className="bg-white/90 backdrop-blur rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
             <div className="flex items-center space-x-3 mb-3">
-              <div className="text-4xl text-yellow-400">☀️</div>
               <div>
                 <p className="text-sm text-gray-500 font-medium">Chỉ số UV</p>
                 <p className="text-2xl font-bold text-gray-800">{currentWeather.uvIndex}</p>
@@ -163,7 +165,6 @@ export default function Home() {
           {/* Visibility Card */}
           <div className="bg-white/90 backdrop-blur rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
             <div className="flex items-center space-x-3 mb-3">
-              <div className="text-4xl text-gray-400">👁️</div>
               <div>
                 <p className="text-sm text-gray-500 font-medium">Tầm nhìn</p>
                 <p className="text-2xl font-bold text-gray-800">{currentWeather.visibility} km</p>
@@ -174,7 +175,6 @@ export default function Home() {
           {/* Sunrise Card */}
           <div className="bg-white/90 backdrop-blur rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
             <div className="flex items-center space-x-3 mb-3">
-              <div className="text-4xl text-orange-300">🌅</div>
               <div>
                 <p className="text-sm text-gray-500 font-medium">Bình minh</p>
                 <p className="text-2xl font-bold text-gray-800">{currentWeather.sunrise}</p>
@@ -185,7 +185,6 @@ export default function Home() {
           {/* Sunset Card */}
           <div className="bg-white/90 backdrop-blur rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
             <div className="flex items-center space-x-3 mb-3">
-              <div className="text-4xl text-orange-500">🌇</div>
               <div>
                 <p className="text-sm text-gray-500 font-medium">Hoàng hôn</p>
                 <p className="text-2xl font-bold text-gray-800">{currentWeather.sunset}</p>
@@ -196,7 +195,6 @@ export default function Home() {
           {/* Cloud Cover Card */}
           <div className="bg-white/90 backdrop-blur rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
             <div className="flex items-center space-x-3 mb-3">
-              <div className="text-4xl text-gray-500">☁️</div>
               <div>
                 <p className="text-sm text-gray-500 font-medium">Mây che phủ</p>
                 <p className="text-2xl font-bold text-gray-800">{currentWeather.cloudCover}%</p>
@@ -229,7 +227,6 @@ export default function Home() {
                 <p className="text-lg font-medium mb-2 opacity-90">Lượng mưa hiện tại</p>
                 <p className="text-5xl font-bold">{currentWeather.precipitation.toFixed(1)} mm</p>
               </div>
-              <div className="text-6xl opacity-80">🌧️</div>
             </div>
           </div>
 
@@ -249,7 +246,6 @@ export default function Home() {
                    currentWeather.windDirection >= 247.5 && currentWeather.windDirection < 292.5 ? 'Tây' : 'Tây Bắc'}
                 </p>
               </div>
-              <div className="text-6xl opacity-80">🧭</div>
             </div>
           </div>
         </div>
