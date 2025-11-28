@@ -1,4 +1,4 @@
-# Weather Forecast 🌤️
+# Air quality Prediction 🌤️
 
 Dự án website dự báo thời tiết và chất lượng không khí full-stack được xây dựng với Next.js, TypeScript, Tailwind CSS, PostgreSQL và Docker.
 
