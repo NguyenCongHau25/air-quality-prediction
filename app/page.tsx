@@ -106,22 +106,13 @@ export default function Home() {
                   <EnvironmentOutlined className="mr-1" /> API
                 </button>
                 <button
-                  onClick={() => setSelectedModel('model1')}
+                  onClick={() => setSelectedModel('model')}
                   className={`px-3 py-1 text-sm font-medium rounded-md transition-colors flex items-center ${
-                    selectedModel === 'model1' ? 'bg-white text-purple-600 shadow' : 'text-gray-600 hover:bg-gray-200'
+                    selectedModel === 'model' ? 'bg-white text-purple-600 shadow' : 'text-gray-600 hover:bg-gray-200'
                   }`}
-                  title="Mô hình dự đoán 1 (Demo)"
+                  title="Mô hình dự đoán (Demo)"
                 >
-                  <ExperimentOutlined className="mr-1" /> Model 1
-                </button>
-                <button
-                  onClick={() => setSelectedModel('model2')}
-                  className={`px-3 py-1 text-sm font-medium rounded-md transition-colors flex items-center ${
-                    selectedModel === 'model2' ? 'bg-white text-purple-600 shadow' : 'text-gray-600 hover:bg-gray-200'
-                  }`}
-                  title="Mô hình dự đoán 2 (Demo)"
-                >
-                  <ExperimentOutlined className="mr-1" /> Model 2
+                  <ExperimentOutlined className="mr-1" /> Model
                 </button>
               </div>
 
